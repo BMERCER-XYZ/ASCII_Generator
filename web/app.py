@@ -6,7 +6,7 @@ from dataclasses import asdict
 from typing import List, Optional, Set
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from flask import Flask, jsonify, render_template, request, send_file
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from PIL import Image
 from werkzeug.utils import secure_filename
 
@@ -141,7 +141,7 @@ def get_settings_from_request(source=None) -> ASCIISettings:
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return send_from_directory(str(ROOT), "index.html")
 
 
 @app.route("/api/preview", methods=["POST"])
