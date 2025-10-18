@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>ASCII Generator - Web Tools</title>
+	<style>
+		:root { color-scheme: dark; }
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			background: #0b0b10;
+			color: #f6f7fb;
+			min-height: 100vh;
+		}
+		header {
+			padding: 24px 24px 0;
+		}
+		header h1 {
+			margin: 0;
+			font-size: 28px;
+			font-weight: 600;
+		}
+		header p {
+			margin: 8px 0 0;
+			max-width: 720px;
+			font-size: 15px;
+			color: #a9afc6;
+		}
+		main {
+			padding: 24px;
+			display: grid;
+			gap: 24px;
+		}
+		@media (min-width: 1024px) {
+			main {
+				grid-template-columns: 320px 1fr;
+				align-items: start;
+			}
+		}
+		.panel {
+			border: 1px solid #2a2f45;
+			border-radius: 12px;
+			background: #121421;
+			padding: 20px;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+		}
+		.panel h2 {
+			margin: 0 0 12px;
+			font-size: 18px;
+			font-weight: 600;
+		}
+		.panel h3 {
+			margin: 24px 0 12px;
+			font-size: 16px;
+			font-weight: 600;
+		}
+		form label {
+			display: grid;
+			gap: 6px;
+			font-size: 13px;
+			margin-bottom: 16px;
+		}
+		input[type="number"],
+		input[type="text"],
+		input[type="file"],
+		select,
+		textarea {
+			width: 100%;
+			padding: 8px 10px;
+			border-radius: 8px;
+			border: 1px solid #262a3f;
+			background: #0f111d;
+			color: #f6f7fb;
+			font-size: 14px;
+		}
+		input[type="checkbox"] {
+			transform: scale(1.1);
+			margin-right: 8px;
+		}
+		button {
+			appearance: none;
+			border: none;
+			border-radius: 999px;
+			padding: 10px 18px;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			background: linear-gradient(135deg, #5560ff, #6fd6ff);
+			color: #0b0b10;
+			transition: transform 0.12s ease, box-shadow 0.12s ease;
+		}
+		button:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			box-shadow: none;
+			transform: none;
+		}
+		button:not(:disabled):hover {
+			transform: translateY(-1px);
+			box-shadow: 0 10px 24px rgba(111, 214, 255, 0.35);
+		}
+		.button-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+			margin-top: 12px;
+		}
+		.status {
+			margin-top: 12px;
+			font-size: 13px;
+			color: #a9afc6;
+			min-height: 18px;
+		}
+		.status.error { color: #ff7b8a; }
+		.status.success { color: #80ffd2; }
+		#previewDisplay {
+			width: 100%;
+			min-height: 280px;
+			display: grid;
+			place-items: center;
+			border-radius: 12px;
+			background: #0f111d;
+			border: 1px dashed #2a2f45;
+			overflow: hidden;
+			position: relative;
+		}
+		#previewDisplay img {
+			max-width: 100%;
+			height: auto;
+			display: block;
+		}
+		.settings-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+			gap: 12px;
+		}
+		.input-list {
+			border-radius: 12px;
+			border: 1px solid #262a3f;
+			background: #0f111d;
+			max-height: 240px;
+			overflow: auto;
+			margin-top: 12px;
+			padding: 12px;
+			display: grid;
+			gap: 8px;
+			font-size: 13px;
+		}
+		.input-list label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin: 0;
+		}
+		.input-list.empty {
+			color: #585f7d;
+			justify-items: center;
+			text-align: center;
+		}
+		.input-actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin-top: 12px;
+		}
+		.quiet-button {
+			background: #1c2035;
+			color: #d1d4e5;
+			box-shadow: none;
+		}
+		.quiet-button:hover {
+			box-shadow: none;
+			transform: none;
+			background: #232844;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<h1>ASCII Generator Web</h1>
+		<p>Preview a single image and convert entire batches straight from your browser. Settings mirror the CLI defaults so you can fine-tune the output without leaving the page.</p>
+	</header>
+
+	<main>
+		<section class="panel" id="settingsPanel">
+			<h2>Rendering Settings</h2>
+			<form id="settingsForm">
+				<div class="settings-grid">
+					<label>Output width
+						<input type="number" id="output_width" name="output_width" min="20" max="2000" value="120" required />
+					</label>
+					<label>Font size
+						<input type="number" id="font_size" name="font_size" min="6" max="72" value="12" />
+					</label>
+					<label>Black threshold
+						<input type="number" id="black_threshold" name="black_threshold" min="0" max="255" value="15" />
+					</label>
+					<label>Char aspect (H/W)
+						<input type="number" id="char_aspect" name="char_aspect" step="0.01" min="0.3" max="1.2" value="0.55" />
+					</label>
+					<label>FG color
+						<input type="text" id="fg_color" name="fg_color" value="black" />
+					</label>
+					<label>BG color
+						<input type="text" id="bg_color" name="bg_color" value="white" />
+					</label>
+				</div>
+			<label>ASCII chars (dark -> light)
+					<input type="text" id="ascii_chars" name="ascii_chars" value="@%#*+=-:. " />
+				</label>
+				<label>Font path (optional)
+					<input type="text" id="font_path" name="font_path" placeholder="/path/to/font.ttf" />
+				</label>
+				<label>
+					<span><input type="checkbox" id="invert" name="invert" />Invert luminance</span>
+				</label>
+			</form>
+		</section>
+
+		<section class="panel" id="workspacePanel">
+			<h2>Preview</h2>
+			<form id="previewForm" enctype="multipart/form-data">
+				<label>Upload image for preview
+					<input type="file" id="previewFile" name="file" accept="image/*" />
+				</label>
+				<div class="button-row">
+					<button type="submit" id="previewButton">Generate Preview</button>
+				</div>
+			</form>
+			<div class="status" id="previewStatus">No preview yet.</div>
+			<div id="previewDisplay">
+				<span>Upload an image or choose one from the input folder.</span>
+			</div>
+
+			<h3>Input Folder</h3>
+			<div class="input-actions">
+				<button type="button" class="quiet-button" id="refreshInput">Refresh list</button>
+				<button type="button" class="quiet-button" id="selectAllInput">Select all</button>
+				<button type="button" class="quiet-button" id="clearInputSelection">Clear selection</button>
+				<button type="button" class="quiet-button" id="previewSelected">Preview selected</button>
+			</div>
+					<div class="input-list" id="inputList">
+						<span>Loading input folder...</span>
+			</div>
+
+			<h3>Batch Conversion</h3>
+			<form id="batchForm" enctype="multipart/form-data">
+				<label>Upload images to batch convert
+					<input type="file" id="batchFiles" name="files" accept="image/*" multiple />
+				</label>
+				<div>
+					<label><input type="checkbox" id="batchTxt" name="include_txt" checked />Generate .txt files</label>
+					<label><input type="checkbox" id="batchPng" name="include_png" checked />Generate .png renders</label>
+				</div>
+				<div class="button-row">
+					<button type="submit" id="convertUploads">Convert uploaded files</button>
+					<button type="button" id="convertInput">Convert selected input files</button>
+				</div>
+			</form>
+			<div class="status" id="batchStatus"></div>
+		</section>
+	</main>
+
+	<script src="{{ url_for('static', filename='web.js') }}" defer></script>
+</body>
+</html>

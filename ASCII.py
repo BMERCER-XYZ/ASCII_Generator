@@ -12,17 +12,16 @@ output_png_folder = "output-png"
 
 ASCII_CHARS = "@%#*+=-:. "
 
-OUTPUT_WIDTH = 500
+OUTPUT_WIDTH = 700
 
-BLACK_THRESHOLD = 15
+BLACK_THRESHOLD = 1
 
 # Prefer a Windows-safe default; fallback to common macOS path; finally Pillow default
 DEFAULT_FONT_PATHS = [
-    "C:/Windows/Fonts/consola.ttf",
     "/System/Library/Fonts/Monaco.ttf",
 ]
 
-FONT_SIZE = 12
+FONT_SIZE = 4
 
 
 @dataclass
@@ -31,12 +30,12 @@ class ASCIISettings:
     output_width: int = OUTPUT_WIDTH
     ascii_chars: str = ASCII_CHARS
     black_threshold: int = BLACK_THRESHOLD
-    invert: bool = False
+    invert: bool = True
     char_aspect: float = 0.55  # height/width correction for typical monospace fonts
     font_path: Optional[str] = None  # if None, auto-pick
     font_size: int = FONT_SIZE
-    fg_color: str = "black"
-    bg_color: str = "white"
+    fg_color: str = "white"
+    bg_color: str = "black"
 
     def resolve_font(self) -> ImageFont.FreeTypeFont:
         """Return a truetype font, falling back to Pillow's default if not found."""
