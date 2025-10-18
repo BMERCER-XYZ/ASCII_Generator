@@ -201,10 +201,10 @@
             <input type="number" id="char_aspect" name="char_aspect" step="0.01" min="0.3" max="1.2" value="0.55" />
           </label>
           <label>FG color
-            <input type="text" id="fg_color" name="fg_color" value="black" />
+            <input type="color" id="fg_color" name="fg_color" value="#ffffff" />
           </label>
           <label>BG color
-            <input type="text" id="bg_color" name="bg_color" value="white" />
+            <input type="color" id="bg_color" name="bg_color" value="#000000" />
           </label>
         </div>
         <label>ASCII chars (dark -> light)
@@ -225,6 +225,14 @@
         <label>Upload image for preview
           <input type="file" id="previewFile" name="file" accept="image/*" />
         </label>
+        <div class="settings-grid">
+          <label>Preview width (px)
+            <input type="number" id="previewWidth" name="preview_width" min="100" max="4096" value="640" />
+          </label>
+          <label>Preview height (px)
+            <input type="number" id="previewHeight" name="preview_height" min="100" max="4096" value="360" />
+          </label>
+        </div>
         <div class="button-row">
           <button type="submit" id="previewButton">Generate Preview</button>
         </div>
@@ -237,6 +245,7 @@
       <h3>Input Folder</h3>
       <div class="input-actions">
         <button type="button" class="quiet-button" id="refreshInput">Refresh list</button>
+        <button type="button" class="quiet-button" id="uploadFolder">Upload folder</button>
         <button type="button" class="quiet-button" id="selectAllInput">Select all</button>
         <button type="button" class="quiet-button" id="clearInputSelection">Clear selection</button>
         <button type="button" class="quiet-button" id="previewSelected">Preview selected</button>
@@ -244,6 +253,8 @@
       <div class="input-list" id="inputList">
         <span>Loading input folder...</span>
       </div>
+
+      <input type="file" id="folderPicker" webkitdirectory multiple hidden />
 
       <h3>Batch Conversion</h3>
       <form id="batchForm" enctype="multipart/form-data">
@@ -263,6 +274,7 @@
     </section>
   </main>
 
+  <script src="static/ascii.js" defer></script>
   <script src="static/web.js" defer></script>
 </body>
 </html>
